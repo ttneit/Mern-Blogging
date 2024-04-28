@@ -9,7 +9,7 @@ import SignIn from './pages/SignIn.jsx'
 import SignUp from './pages/SignUp.jsx' 
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
-
+import PrivateRoute from './components/PrivateRoute.jsx'
 function App() {
   
 
@@ -20,7 +20,9 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/project' element={<Project />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route element={<PrivateRoute />} >
+          <Route path='/dashboard' element={<Dashboard />} />
+        </Route>
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
       </Routes>
