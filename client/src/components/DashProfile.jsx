@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, uploadBytesResumable ,ref} from 'firebase/storage'
 import { app } from '../firebase';
+import { Link } from 'react-router-dom';
 import {HiOutlineExclamationCircle} from 'react-icons/hi'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -10,6 +11,7 @@ import { updateUserFailure,updateUserSuccess,updateUserStart,deleteUserStart,del
 export default function DashProfile() {
     const currentUser = useSelector(state =>state.user).currentUser;
     const error = useSelector(state =>state.user).error;
+    const loading = useSelector(state =>state.user).loading;
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl,setImageFileUrl] = useState(null);
     const filePickerRef = useRef();
@@ -201,9 +203,18 @@ export default function DashProfile() {
                 onChange={handleChange}
             />
             </div>
-            <Button gradientDuoTone='purpleToBlue' type='submit 'outline>
-              Update 
+            <Button gradientDuoTone='purpleToBlue' type='submit 'outline disabled = {loading || imageFileUploading}>
+              {loading ? 'Loading...' : ' Update'} 
             </Button>
+            {
+              currentUser.isAdmin && (
+                <Link to ='/create-post'>
+                  <Button gradientDuoTone='purpleToBlue' type='button' className='w-full'>
+                    Create post 
+                  </Button>
+                </Link>
+              )
+            }
         </form>
         <div className='text-red-500 flex justify-between mt-5'>
             <span onClick = { () => setShowModal(true)}className='cursor-pointer' > Delete account</span>
