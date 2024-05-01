@@ -12,21 +12,25 @@ import Footer from './components/Footer.jsx'
 import PrivateRoute from './components/PrivateRoute.jsx'
 import OnlyRouteForAdmin from './components/OnlyRouteForAdmin.jsx';
 import CreatePost from './pages/CreatePost.jsx';
+import UpdatePost from './pages/UpdatePost.jsx';
+import PostPage from './pages/PostPage.jsx';
 function App() {
   
 
-  return (
+  return ( 
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/project' element={<Project />} />
+        <Route path='/post/:postSlug' element={<PostPage />} />
         <Route element={<PrivateRoute />} >
           <Route path='/dashboard' element={<Dashboard />} />
         </Route>
         <Route element={<OnlyRouteForAdmin />} >
           <Route path='/create-post' element={<CreatePost />} />
+          <Route path='/update-post/:postId' element={<UpdatePost />} />
         </Route>
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
