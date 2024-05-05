@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {Avatar, Button,Dropdown,Navbar,TextInput} from 'flowbite-react'
 import { AiOutlineSearch } from "react-icons/ai";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaMoon } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -11,6 +11,9 @@ export default function Header() {
   const path = useLocation().pathname;
   const dispatch = useDispatch();
   const currentUser = useSelector(state =>state.user).currentUser;
+  const [searchTerm,setSearchTerm] = useState('');
+  const location = useLocation();
+  const navigate =useNavigate();
   const handleSignOut = async() => {
     try {
       const res = await fetch('/api/user/signout', {
@@ -26,6 +29,21 @@ export default function Header() {
       console.log(error.message);
     }
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams  = new URLSearchParams(location.search);
+    urlParams.set('searchTerm',searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  }
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get('searchTerm');
+    if(searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+
+  },[location.search]);
   return (
     <Navbar>
       <Navbar.Brand>
@@ -34,12 +52,14 @@ export default function Header() {
         </Link>
         
       </Navbar.Brand>
-      <form>
+      <form onSubmit={handleSubmit}>
           <TextInput 
               type='text'
               placeholder='Search'
               rightIcon={ AiOutlineSearch }
               className='hideen lg:inline'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
         <Button className='w-12 h-10 lg:hidden' color='gray' pill>
