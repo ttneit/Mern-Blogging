@@ -17,7 +17,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MO
     console.log(err);
 })
 
-const app =express();
+const app = express();
 
 const __dirname =  path.resolve();
 app.use(express.json());
