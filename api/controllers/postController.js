@@ -53,7 +53,20 @@ export const getposts = async(req,res,next) => {
         next(error);
     }
 }
-
+export const getpost = async(req,res,next) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+        if(!req.user.isAdmin || req.user.id !== post.userId) {
+            return next(errorHandler(403,'You\'re not allowed to edit this post'))
+        }
+        if(!post ){
+            next(errorHandler(404,"Post not found"));
+        }
+        res.status(200).json(post);
+    } catch (error) {
+        next(error);
+    }
+}
 export const deletepost = async (req, res, next) =>{
     if(!req.user.isAdmin || req.user.id !== req.params.userId) {
         return next(errorHandler(403,'You\'re not allowed to delete this post'))

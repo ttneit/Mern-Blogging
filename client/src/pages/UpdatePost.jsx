@@ -20,17 +20,17 @@ export default function UpdatePost() {
     useEffect(() => {
         try {
             const fetchPosts = async() => {
-                const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`)
+                const res = await fetch(`/api/post/getpost/${postId}`)
                 const data = await res.json();
                 if(!res.ok) {
                     console.log(data.message);
                     setPublishError(data.message);
                     return;
                 }
+                console.log(data);
                 if(res.ok) {
                     setPublishError(null);
-                    setFormData(data[0]);
-
+                    setFormData(data);
                 }
             }
             fetchPosts();
