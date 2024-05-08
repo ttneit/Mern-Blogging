@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path='/project' element={<Project />} />
+        <Route path='#' element={<Project />} />
         <Route path='/post/:postSlug' element={<PostPage />} />
         <Route element={<PrivateRoute />} >
           <Route path='/dashboard' element={<Dashboard />} />
