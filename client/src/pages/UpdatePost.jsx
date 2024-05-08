@@ -80,7 +80,7 @@ export default function UpdatePost() {
      const handleSubmit = async(e) => {
         e.preventDefault();
         try {
-            const res = await fetch (`/api/post/update/${formData._id}/${currentUser._id}`, {
+            const res = await fetch (`/api/post/update/${postId}/${currentUser._id}`, {
                 method:'PUT',
                 headers:{'Content-Type' :'application/json'},
                 body:JSON.stringify(formData),
@@ -108,9 +108,10 @@ export default function UpdatePost() {
                 <TextInput type ='text' placeholder='Title' required id = 'title' className='flex-1' onChange={(e) =>setFormData({ ...formData, title: e.target.value })} value={formData.title}/>
                <Select onChange={(e) =>setFormData({ ...formData, category: e.target.value })} value={formData.category}>
                     <option value='uncategorized' > Uncategorized</option>
-                    <option value='reactjs' > ReactJs</option>
-                    <option value='javascript' > JavaScript</option>
-                    <option value='nextjs' > Next.Js</option>
+                    <option value='Coding' > Coding</option>
+                    <option value='Sport' > Sport</option>
+                    <option value='finance' > Finance</option>
+                    <option value='gaming' > Gaming</option>
                 </Select>
             </div>
             <div className='flex gap-4 items-center jusitfy-between border-4 border-teal-500 border-dotted p-3'>
