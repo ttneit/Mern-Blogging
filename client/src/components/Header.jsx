@@ -90,19 +90,19 @@ export default function Header() {
             </Button>
           )
         }
-        
+        <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-            <Navbar.Link active ={path === '/'}>
-                <Link to='/'>Home</Link>
-            </Navbar.Link>
-            <Navbar.Link active ={path === '/about'}>
-                <Link to='/about'>About</Link>
-            </Navbar.Link>
-            <Navbar.Link active ={path === '/project'}>
-                <Link to='#'>Project</Link>
-            </Navbar.Link>
-      </Navbar.Collapse>
+        <Navbar.Link active ={path === '/'} as={'div'}>
+            <Link to='/'>Home</Link>
+        </Navbar.Link>
+        <Navbar.Link active ={path === '/about'} as={'div'}>
+            <Link to='/about'>About</Link>
+        </Navbar.Link>
+        <Navbar.Link active ={path === '/project'} as={'div'}>
+            <Link to='#'>Project</Link>
+        </Navbar.Link>
+      </Navbar.Collapse>                      
     </Navbar>
   );
 }
