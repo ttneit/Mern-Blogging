@@ -6,9 +6,8 @@ import authRoute from './routes/authRoutes.js';
 import postRoute from './routes/postRoutes.js';
 import commentRoute from './routes/commentRoutes.js';
 import cookieParser from 'cookie-parser';
-
 import path from 'path';
-
+import cors from 'cors';
 dotenv.config()
 
 mongoose.connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.auznugq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`).then(
@@ -19,6 +18,14 @@ mongoose.connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MO
 
 const app = express();
 
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization'
+  };
+  
+app.use(cors(corsOptions));
+app.options('*',cors());
 const __dirname =  path.resolve();
 app.use(express.json());
 app.use(cookieParser());
@@ -35,7 +42,6 @@ app.use(express.static(path.join(__dirname,'/client/dist')));
 app.get('*',(req,res) => {
     res.sendFile(path.join(__dirname,'client','dist','index.html'))
 });
-
 app.use((err,req,res,next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
