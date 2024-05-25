@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {Avatar, Button,Dropdown,Navbar,TextInput} from 'flowbite-react'
 import { AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
