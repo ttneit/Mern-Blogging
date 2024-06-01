@@ -1,11 +1,13 @@
 import { Button, Table,Modal } from 'flowbite-react';
-import React, { useEffect, useState } from 'react';
-import {useSelector} from 'react-redux';
+import React, { useEffect, useState,useContext } from 'react';
+// import {useSelector} from 'react-redux';
 import { Link } from 'react-router-dom';
 import {HiOutlineExclamationCircle} from 'react-icons/hi';
+import { UserContext } from '../context/userContext';
 
 export default function DashPosts() {
-  const currentUser = useSelector(state =>state.user).currentUser;
+  // const currentUser = useSelector(state =>state.user).currentUser;
+  const userContext = useContext(UserContext)
   const [userPosts,setUserPosts] = useState([]);
   const [showMore,setShowMore] = useState(true);
   const [showModal,setShowModal] = useState(false);
@@ -13,7 +15,7 @@ export default function DashPosts() {
   useEffect(()=> {
     const fetchPosts = async() => {
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`)
+        const res = await fetch(`/api/post/getposts?userId=${userContext.currentUser._id}`)
         const data = await res.json();
         if(res.ok) {
           setUserPosts(data.posts);
@@ -25,14 +27,14 @@ export default function DashPosts() {
         console.log(error.message);
       }
     };
-    if(currentUser.isAdmin){
+    if(userContext.currentUser.isAdmin){
       fetchPosts();
     }
-  },[currentUser._id]);
+  },[userContext.currentUser._id]);
   const handleShowMore = async() => {
     const startIndex = userPosts.length;
     try {
-      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`)
+      const res = await fetch(`/api/post/getposts?userId=${userContext.currentUser._id}&startIndex=${startIndex}`)
       const data = await res.json();
       if(res.ok) {
         setUserPosts((prev) =>[...prev,...data.posts]);
@@ -47,8 +49,8 @@ export default function DashPosts() {
   const handleDeletePost = async(e) => {
     setShowModal(false);
     try {
-      console.log(`/api/post/deletepost/${postIdToDelete}/${currentUser._id}`);
-      const res = await fetch(`/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,{
+      console.log(`/api/post/deletepost/${postIdToDelete}/${userContext.currentUser._id}`);
+      const res = await fetch(`/api/post/deletepost/${postIdToDelete}/${userContext.currentUser._id}`,{
         method : 'DELETE',
       });
       const data = await res.json();
@@ -66,7 +68,7 @@ export default function DashPosts() {
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
       {
-        currentUser.isAdmin && (userPosts.length) > 0 ? (
+        userContext.currentUser.isAdmin && (userPosts.length) > 0 ? (
           <>
             <Table hoverable className='shadow-md'>
               <Table.Head>

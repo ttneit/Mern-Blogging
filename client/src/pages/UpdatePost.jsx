@@ -1,15 +1,17 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {useSelector} from 'react-redux';
+// import {useSelector} from 'react-redux';
 import {getDownloadURL, getStorage, uploadBytesResumable ,ref} from 'firebase/storage'
 import {app} from '../firebase'
 import {CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import {useNavigate,useParams} from 'react-router-dom';
+import { UserContext } from '../context/userContext';
 export default function UpdatePost() {
-    const currentUser = useSelector(state =>state.user).currentUser;
+    // const currentUser = useSelector(state =>state.user).currentUser;
+    const userContext = useContext(UserContext)
     const [file,setFile] = useState(null);
     const [imageUploadProgress,setImageUploadProgress] =useState(null);
     const [imageUploadError,setImageUploadError] =useState(null);
@@ -80,7 +82,7 @@ export default function UpdatePost() {
      const handleSubmit = async(e) => {
         e.preventDefault();
         try {
-            const res = await fetch (`/api/post/update/${postId}/${currentUser._id}`, {
+            const res = await fetch (`/api/post/update/${postId}/${userContext.currentUser._id}`, {
                 method:'PUT',
                 headers:{'Content-Type' :'application/json'},
                 body:JSON.stringify(formData),

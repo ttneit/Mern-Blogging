@@ -1,5 +1,5 @@
 import { Label,TextInput,Button, Alert, Spinner, Modal } from 'flowbite-react';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, uploadBytesResumable ,ref} from 'firebase/storage'
 import { app } from '../firebase';
@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom';
 import {HiOutlineExclamationCircle} from 'react-icons/hi'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateUserFailure,updateUserSuccess,updateUserStart,deleteUserStart,deleteUserSuccess,deleteUserFailure ,signOutSuccess} from '../redux/user/userSlice';
+// import { updateUserFailure,updateUserSuccess,updateUserStart,deleteUserStart,deleteUserSuccess,deleteUserFailure ,signOutSuccess} from '../redux/user/userSlice';
+import { UserContext } from '../context/userContext';
 export default function DashProfile() {
-    const currentUser = useSelector(state =>state.user).currentUser;
-    const error = useSelector(state =>state.user).error;
-    const loading = useSelector(state =>state.user).loading;
+    // const currentUser = useSelector(state =>state.user).currentUser;
+    // const error = useSelector(state =>state.user).error;
+    // const loading = useSelector(state =>state.user).loading;
+    const userContext = useContext(UserContext);
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl,setImageFileUrl] = useState(null);
     const filePickerRef = useRef();
@@ -22,7 +24,7 @@ export default function DashProfile() {
     const [updateUserError,setUpdateUserError] = useState(null);
     const [formData,setFormData] = useState({});
     const [showModal,setShowModal] = useState(false);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
       };
@@ -38,7 +40,8 @@ export default function DashProfile() {
         return ;
       }
       try {
-        dispatch(updateUserStart());
+        // dispatch(updateUserStart());
+        userContext.updateUserStart();
         const res = await fetch (`/api/user/updateUser/${currentUser._id}`, {
           method : 'PUT',
           headers : {'Content-Type' : 'application/json'},
@@ -46,14 +49,17 @@ export default function DashProfile() {
         })
         const data = await res.json();
         if(res.ok) {
-          dispatch(updateUserSuccess(data));  
+          // dispatch(updateUserSuccess(data));  
+          userContext.updateUserSuccess(data)
           setUpdateUserSuccess("User's profile is updated successully ")
         }else {
           setUpdateUserError(data.message)
-          dispatch(updateUserFailure(data.message));
+          // dispatch(updateUserFailure(data.message));
+          userContext.updateUserFailure(data.message)
         }
       } catch (error) {
-        dispatch(updateUserFailure(error.message));
+        // dispatch(updateUserFailure(error.message));
+        userContext.updateUserFailure(error.message)
         setUpdateUserError(error.message)
       }
     }
@@ -102,18 +108,22 @@ export default function DashProfile() {
   const handleDeleteUser = async(e) => {
     setShowModal(false);
     try {
-      dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/deleteUser/${currentUser._id}`,{
+      // dispatch(deleteUserStart());
+      userContext.deleteUserStart();
+      const res = await fetch(`/api/user/deleteUser/${userContext.currentUser._id}`,{
         method : 'DELETE',
       });
       const data = await res.json();
       if(res.ok) {
-        dispatch(deleteUserSuccess(data));  
+        // dispatch(deleteUserSuccess(data));  
+        userContext.deleteUserSuccess(data);
       }else { 
-        dispatch(deleteUserSuccess(data.message));
+        // dispatch(deleteUserSuccess(data.message));
+        userContext.deleteUserSuccess(data);
       }
     } catch (error) {
-      dispatch(deleteUserFailure(error.message));
+      // dispatch(deleteUserFailure(error.message));
+      userContext.deleteUserSuccess(data);
     }
   };
   const handleSignOut = async() => {
@@ -125,7 +135,8 @@ export default function DashProfile() {
       if(!res.ok) {
         console.log(data.message);
       }else {
-        dispatch(signOutSuccess());
+        // dispatch(signOutSuccess());
+        userContext.signOutSuccess();
       }
     } catch (error) {
       console.log(error.message);
@@ -164,7 +175,7 @@ export default function DashProfile() {
             />
           )}
           <img
-            src={imageFileUrl || currentUser.profilePicture}
+            src={imageFileUrl || userContext.currentUser.profilePicture}
             alt='user'
             className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
               imageFileUploadProgress &&
@@ -180,7 +191,7 @@ export default function DashProfile() {
             <Label value = 'Your Username' />
             <TextInput 
                 type='text'
-                defaultValue={currentUser.username}
+                defaultValue={userContext.currentUser.username}
                 id='username'
                 onChange={handleChange}
             />
@@ -189,7 +200,7 @@ export default function DashProfile() {
             <Label value = 'Your Email' />
             <TextInput 
                 type='email'
-                defaultValue={currentUser.email}
+                defaultValue={userContext.currentUser.email}
                 id='email'
                 onChange={handleChange}
             />
@@ -203,11 +214,11 @@ export default function DashProfile() {
                 onChange={handleChange}
             />
             </div>
-            <Button gradientDuoTone='purpleToBlue' type='submit 'outline disabled = {loading || imageFileUploading}>
-              {loading ? 'Loading...' : ' Update'} 
+            <Button gradientDuoTone='purpleToBlue' type='submit 'outline disabled = {userContext.loading || imageFileUploading}>
+              {userContext.loading ? 'Loading...' : ' Update'} 
             </Button>
             {
-              currentUser.isAdmin && (
+              userContext.currentUser.isAdmin && (
                 <Link to ='/create-post'>
                   <Button gradientDuoTone='purpleToBlue' type='button' className='w-full'>
                     Create post 
@@ -235,9 +246,9 @@ export default function DashProfile() {
           )
         }
         {
-          error && (
+          userContext.error && (
             <Alert color='failure' className='mt-5'>
-              {error}
+              {userContext.error}
             </Alert>
           )
         }

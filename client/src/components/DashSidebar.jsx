@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useLocation,Link } from 'react-router-dom'
 import { HiArrowSmRight,    HiUser,HiDocumentText,HiOutlineUserGroup,HiAnnotation,HiChartPie } from "react-icons/hi";
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { Sidebar } from 'flowbite-react';
-import { signOutSuccess } from '../redux/user/userSlice';
-import { useDispatch } from 'react-redux';
+// import { signOutSuccess } from '../redux/user/userSlice';
+// import { useDispatch } from 'react-redux';
+import { UserContext } from '../context/userContext';
 export default function DashSidebar() {
     const location = useLocation();
-    const currentUser = useSelector(state => state.user).currentUser;
-    const dispatch = useDispatch();
+    // const currentUser = useSelector(state => state.user).currentUser;
+    // const dispatch = useDispatch();
+    const userContext = useContext(UserContext)
     const [tab,setTab]= useState('');
     useEffect(()=>{
       const urlParams =new URLSearchParams(location.search)
@@ -26,7 +28,8 @@ export default function DashSidebar() {
         if(!res.ok) {
           console.log(data.message);
         }else {
-          dispatch(signOutSuccess());
+          // dispatch(signOutSuccess());
+          userContext.signOutSuccess();
         }
       } catch (error) {
         console.log(error.message);
@@ -37,12 +40,12 @@ export default function DashSidebar() {
       <Sidebar.Items>
         <Sidebar.ItemGroup className='flex flex-col gap-1'>
                 <Link to='/dashboard?tab=profile'>
-                  <Sidebar.Item href="/dashboard?tab=profile" label= {currentUser.isAdmin ? 'Admin' : 'User'} icon={HiUser} active = {tab === 'profile'} labelColor='dark' as='div'>
+                  <Sidebar.Item href="/dashboard?tab=profile" label= {userContext.currentUser.isAdmin ? 'Admin' : 'User'} icon={HiUser} active = {tab === 'profile'} labelColor='dark' as='div'>
                       Profile
                   </Sidebar.Item>
                 </Link>
                 {
-                  currentUser.isAdmin && (
+                  userContext.currentUser.isAdmin && (
                     <Link to='/dashboard?tab=posts'>
                     <Sidebar.Item href="/dashboard?tab=posts" icon={HiDocumentText} active = {tab === 'posts'} labelColor='dark' as='div'>
                       Posts
@@ -51,7 +54,7 @@ export default function DashSidebar() {
                   )
                 }
                 {
-                  currentUser.isAdmin && (
+                  userContext.currentUser.isAdmin && (
                     <Link to='/dashboard?tab=users'>
                     <Sidebar.Item href="/dashboard?tab=users" icon={HiOutlineUserGroup} active = {tab === 'users'} labelColor='dark' as='div'>
                       Users
@@ -60,7 +63,7 @@ export default function DashSidebar() {
                   )
                 }
                 {
-                  currentUser.isAdmin && (
+                  userContext.currentUser.isAdmin && (
                     <Link to='/dashboard?tab=comments'>
                     <Sidebar.Item href="/dashboard?tab=comments" icon={HiAnnotation} active = {tab === 'comments'} labelColor='dark' as='div'>
                       Comments
@@ -69,7 +72,7 @@ export default function DashSidebar() {
                   )
                 }
                 {
-                  currentUser.isAdmin && (
+                  userContext.currentUser.isAdmin && (
                     <Link to='/dashboard?tab=dashboards'>
                     <Sidebar.Item href="/dashboard?tab=dashboards" icon={HiChartPie} active = {tab === 'dashboards'} labelColor='dark' as='div'>
                     Dashboards

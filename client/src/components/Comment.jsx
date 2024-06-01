@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { Button, Textarea } from 'flowbite-react';
 import {FaThumbsUp} from 'react-icons/fa'
-import { useSelector } from 'react-redux';
+import { UserContext } from '../context/userContext';
+// import { useSelector } from 'react-redux';
 export default function Comment({comment , onLike,onEdit,onDelete}) {
   const [user,setUser] = useState({});
-  const currentUser = useSelector(state =>state.user).currentUser;
+  // const currentUser = useSelector(state =>state.user).currentUser;
+  const userContext = useContext(UserContext);
   const [isEditing,setIsEditing] = useState(false);
   const [editedContent,setEditedContent] = useState(comment.content);
   useEffect(()=>{
@@ -76,7 +78,7 @@ export default function Comment({comment , onLike,onEdit,onDelete}) {
             <>
             <p className='text-gray-500 pb-2'>{comment.content}</p>
           <div className='flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2'>
-            <button type='button' onClick = {() => onLike(comment._id)} className={`text-gray-400 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id) && '!text-blue-500'} `}>
+            <button type='button' onClick = {() => onLike(comment._id)} className={`text-gray-400 hover:text-blue-500 ${userContext.currentUser && comment.likes.includes(userContext.currentUser._id) && '!text-blue-500'} `}>
               <FaThumbsUp className='text-sm'/>
 
             </button>
@@ -84,7 +86,7 @@ export default function Comment({comment , onLike,onEdit,onDelete}) {
               {comment.numberOfLikes > 0  && comment.numberOfLikes  + " " + (comment.numberOfLikes === 1 ? 'like' : 'likes')}
             </p>
             {
-              currentUser && (currentUser._id  === comment.userId || currentUser.isAdmin) && (
+              userContext.currentUser && (userContext.currentUser._id  === comment.userId || userContext.currentUser.isAdmin) && (
                 <>
                   <button type ="button" className='text-gray-400 hover:text-red-500' onClick={handleEdit}>
                     Edit

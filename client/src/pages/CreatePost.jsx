@@ -84,7 +84,7 @@ export default function CreatePost() {
                     <option value='uncategorized' > Uncategorized</option>
                     <option value='coding' > Coding</option>
                     <option value='sport' > Sport</option>
-                    <option value='finance' > Finance</option>
+                    <option value='data' > Data</option>
                     <option value='gaming' > Gaming</option>
                 </Select>
             </div>

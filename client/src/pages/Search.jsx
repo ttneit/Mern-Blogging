@@ -113,14 +113,14 @@ export default function Search() {
               <option value='uncategorized'>
               Uncategorized
               </option>
-              <option value='reactjs'>
-                Reactjs
+              <option value='coding'>
+                Coding
               </option>
-              <option value='javascript'>
-              Javascript
+              <option value='data'>
+                Data
               </option>
-              <option value='nextjs'>
-              Next.Js
+              <option value='gaming'>
+              Gaming
               </option> 
             </Select>
           </div>

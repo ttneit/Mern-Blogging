@@ -1,16 +1,19 @@
 import { Label,TextInput,Button, Spinner ,Alert} from 'flowbite-react';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { signInFailure,signInStart,signInSuccess } from '../redux/user/userSlice';
-import { useDispatch,useSelector } from 'react-redux';
+// import { signInFailure,signInStart,signInSuccess } from '../redux/user/userSlice';
+// import { useDispatch,useSelector } from 'react-redux';
 import OAuth from '../components/OAuth.jsx'
+import { UserContext } from '../context/userContext.jsx';
 export default function SignIn() {
   const [formData,setFormData] = useState({})
   const navigate = useNavigate()
   // const [loading,setLoading] = useState(false)
   // const [errorMessage,setErrorMessage] = useState(null)
-  const dispatch  = useDispatch();
-  const {loading,error : errorMessage} = useSelector(state =>state.user)
+  // const dispatch  = useDispatch();
+  const userContext = useContext(UserContext)
+  const {loading,error : errorMessage} = userContext
+
   const handleChange = (e) =>{
     setFormData({...formData,[e.target.id] :e.target.value.trim()})
   }
@@ -24,7 +27,8 @@ export default function SignIn() {
     try {
       // setLoading(true);
       // setErrorMessage(null);
-      dispatch(signInStart());
+      // dispatch(signInStart());
+      userContext.signInStart();
       const res = await fetch('/api/auth/signin',{
         method : 'POST',
         headers : {'Content-Type' : 'application/json'},
@@ -33,15 +37,18 @@ export default function SignIn() {
       const data = await res.json();
       if(data.success === false) {
         // return setErrorMessage(data.message);
-        dispatch(signInFailure(data.message));
+        // dispatch(signInFailure(data.message));
+        userContext.signInFailure(data.message);
       }
       // setLoading(false);
       if(res.ok === true) {
-        dispatch(signInSuccess(data));
+        // dispatch(signInSuccess(data));
+        userContext.signInSuccess(data);
         navigate('/');
       }
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      // dispatch(signInFailure(error.message));
+      userContext.signInFailure(error.message);
     }
 
   };

@@ -72,9 +72,9 @@ export default function PostPage() {
       <div className='p-3 max-w-2xl mx-auto w-full post-content' dangerouslySetInnerHTML={{__html : post && post.content}}>
 
       </div>
-      <div className='max-w-4xl mx-auto w-full'>
+      {/* <div className='max-w-4xl mx-auto w-full'>
         <CallToAction />    
-     </div>
+     </div> */}
      <CommentSection postId={post._id} />
      <div className='flex flex-col justify-center items-center mb-5'>
         <h1 className='text-xl mt-5'>Recent articles</h1>

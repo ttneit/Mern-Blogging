@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {Avatar, Button,Dropdown,Navbar,TextInput} from 'flowbite-react'
 import { AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaMoon,FaSun } from "react-icons/fa";
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { changeTheme } from '../redux/theme/themeSlice';
-import { signOutSuccess } from '../redux/user/userSlice';
+// import { useSelector } from 'react-redux';
+// import { useDispatch } from 'react-redux';
+
+// import { signOutSuccess } from '../redux/user/userSlice';
+import { ThemeContext } from '../context/themeContext';
+import { UserContext } from '../context/userContext';
 export default function Header() {
   const path = useLocation().pathname;
-  const dispatch = useDispatch();
-  const currentUser = useSelector(state =>state.user).currentUser;
-  const { theme } = useSelector((state) => state.theme);
+  // const dispatch = useDispatch();
+  // const currentUser = useSelector(state =>state.user).currentUser;
+  const userContext = useContext(UserContext);
+  const themeContext = useContext(ThemeContext)
+
   const [searchTerm,setSearchTerm] = useState('');
   const location = useLocation();
   const navigate =useNavigate();
@@ -24,7 +28,8 @@ export default function Header() {
       if(!res.ok) {
         console.log(data.message);
       }else {
-        dispatch(signOutSuccess());
+        // dispatch(signOutSuccess());
+        userContext.signOutSuccess()
       }
     } catch (error) {
       console.log(error.message);
@@ -45,7 +50,6 @@ export default function Header() {
     }
 
   },[location.search]);
-  console.log(theme);
   return (
     <Navbar className='border-b-2'>
         <Link to="/" className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'> 
@@ -65,18 +69,18 @@ export default function Header() {
             <AiOutlineSearch />
         </Button>
       <div className='flex gap-2 md:order-2'>
-        <Button className='w-12 h-10 hidden sm:inline' color='gray'   pill  onClick={() =>dispatch(changeTheme())}>
-            {theme === 'light' ? <FaMoon /> : <FaSun />}
+        <Button className='w-12 h-10 hidden sm:inline' color='gray'   pill  onClick={themeContext.changeTheme}>
+            {themeContext.theme === 'light' ? <FaMoon /> : <FaSun />}
         </Button>
         {
-          currentUser ? (
+          userContext.currentUser ? (
             <Dropdown arrowIcon={false} inline label={
-              <Avatar alt='user' img={currentUser.profilePicture} rounded />
+              <Avatar alt='user' img={userContext.currentUser.profilePicture} rounded />
 
             }>
               <Dropdown.Header>
-                <span className='block text-sm'>@{currentUser.username}</span>
-                <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
+                <span className='block text-sm'>@{userContext.currentUser.username}</span>
+                <span className='block text-sm font-medium truncate'>{userContext.currentUser.email}</span>
               </Dropdown.Header>
               <Link to='/dashboard?tab=profile'>
                 <Dropdown.Item>Profile</Dropdown.Item>

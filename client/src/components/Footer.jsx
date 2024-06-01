@@ -1,6 +1,6 @@
 import React from 'react'
 import {Footer} from 'flowbite-react'
-import { BsDribbble, BsFacebook, BsGithub, BsInstagram, BsTwitter } from "react-icons/bs";
+import {  BsFacebook, BsGithub } from "react-icons/bs";
 import { Link } from 'react-router-dom'
 export default function FooterComponent() {
   return (
@@ -12,13 +12,13 @@ export default function FooterComponent() {
                 <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Personal Blogs</span>
               </Link>
             </div>
-            {/* <div>
+            <div>
               <Footer.Title title='About'/>
               <Footer.LinkGroup col>
                 <Footer.Link href='#' >Other projects</Footer.Link>
                 <Footer.Link href='#'>Personal project</Footer.Link>
               </Footer.LinkGroup>
-            </div> */}
+            </div>
             <div>
               <Footer.Title title='Connect'/>
               <Footer.LinkGroup col>

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import React, { useContext, useEffect, useState } from 'react'
+// import { useSelector } from 'react-redux';
 import { HiArrowSmRight,    HiUser,HiDocumentText,HiOutlineUserGroup,HiAnnotation,HiArrowNarrowUp } from "react-icons/hi";
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/userContext';
 export default function DashboardCompo() {
     const [users,setUsers] = useState([]);
     const [comments,setComments] = useState([]);
@@ -13,7 +14,8 @@ export default function DashboardCompo() {
     const [lastMonthUsers,setLastMonthUsers] = useState(0);
     const [lastMonthComments,setLastMonthComments] = useState(0);
     const [lastMonthPosts,setLastMonthPosts] = useState(0);
-    const currentUser = useSelector(state => state.user).currentUser;
+    // const currentUser = useSelector(state => state.user).currentUser;
+    const userContext = useContext(UserContext);
     useEffect (() => {
         const fetchUsers = async() => {
             try {
@@ -54,12 +56,12 @@ export default function DashboardCompo() {
                 console.log(error.message);
             }
         }
-        if(currentUser.isAdmin) {
+        if(userContext.user.isAdmin) {
             fetchUsers();
             fetchPosts();
             fetchComments();
         }
-    },[currentUser]);
+    },[userContext.user]);
   return (
     <div className='p-3 md:mx-auto'>
         <div className='flex-wrap flex gap-4 justify-center'> 

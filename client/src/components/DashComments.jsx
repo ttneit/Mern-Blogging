@@ -1,11 +1,13 @@
 import { Button, Table,Modal } from 'flowbite-react';
-import React, { useEffect, useState } from 'react';
-import {useSelector} from 'react-redux';
+import React, { useContext, useEffect, useState } from 'react';
+// import {useSelector} from 'react-redux';
 
 import {HiOutlineExclamationCircle} from 'react-icons/hi';
 import { FaCheck, FaTimes } from 'react-icons/fa';
+import { UserContext } from '../context/userContext';
 export default function DashComments() {
-  const currentUser = useSelector(state =>state.user).currentUser;
+  // const currentUser = useSelector(state =>state.user).currentUser;
+  const currentUser = useContext(UserContext)
   const [comments,setComments] = useState([]);
   const [showMore,setShowMore] = useState(true);
   const [showModal,setShowModal] = useState(false);
@@ -25,10 +27,10 @@ export default function DashComments() {
         console.log(error.message);
       }
     };
-    if(currentUser.isAdmin){
+    if(currentUser.currentUser.isAdmin){
       fetchComments();
     }
-  },[currentUser._id]);
+  },[currentUser.currentUser._id]);
   const handleShowMore = async() => {
     const startIndex = comments.length;
     try {
@@ -66,7 +68,7 @@ export default function DashComments() {
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
       {
-        currentUser.isAdmin && (comments.length) > 0 ? (
+        currentUser.currentUser.isAdmin && (comments.length) > 0 ? (
           <>
             <Table hoverable className='shadow-md'>
               <Table.Head>
