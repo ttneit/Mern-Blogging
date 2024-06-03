@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    @apply font-body;
+    @apply text-lg;
+}
+  
+
 body{
     height: 100vh;
 }
@@ -39,3 +45,4 @@ body{
 .dark .post-content  a {
     color: red;
 }
+

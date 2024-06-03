@@ -29,7 +29,6 @@ export default function UpdatePost() {
                     setPublishError(data.message);
                     return;
                 }
-                console.log(data);
                 if(res.ok) {
                     setPublishError(null);
                     setFormData(data);
@@ -41,7 +40,7 @@ export default function UpdatePost() {
             console.log(error.message);
         }
     },[postId]);
-    console.log(formData);
+
     const handleUploadImage = async () => {
         try {
             if(!file) {
@@ -79,29 +78,31 @@ export default function UpdatePost() {
             console.log(error);
         }
     };
-     const handleSubmit = async(e) => {
-        e.preventDefault();
-        try {
-            const res = await fetch (`/api/post/update/${postId}/${userContext.currentUser._id}`, {
-                method:'PUT',
-                headers:{'Content-Type' :'application/json'},
-                body:JSON.stringify(formData),
-            })
-            console.log(res);
-            const data = await res.json();
-            
-            if(!res.ok) {
-                setPublishError(data.message);
-                return;
-            }else{
-                setPublishError(null);
-                navigate(`/post/${data.slug}`);
-            }
-        } catch (error) {
-            
+    const handleFormData = async(e) => {
+        
+    }
+    const handleSubmit = async(e) => {
+    e.preventDefault();
+    try {
+        const res = await fetch (`/api/post/update/${postId}/${userContext.currentUser._id}`, {
+            method:'PUT',
+            headers:{'Content-Type' :'application/json'},
+            body:JSON.stringify(formData),
+        })
+        console.log(res);
+        const data = await res.json();
+        
+        if(!res.ok) {
+            setPublishError(data.message);
+            return;
+        }else{
+            setPublishError(null);
+            navigate(`/post/${data.slug}`);
         }
-     }
-     console.log(formData);
+    } catch (error) {
+        
+    }
+    }
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
         <h1 className='text-center text-3xl my-7 font-semibold'>Update a post</h1>

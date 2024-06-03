@@ -126,7 +126,7 @@ export default function CreatePost() {
                       { indent: "-1" },
                       { indent: "+1" },
                     ],
-                    ["link", "image", "video"],
+                    ["link", "image"],
                     ["code-block"],
                     ["clean"],
                   ],
@@ -149,7 +149,6 @@ export default function CreatePost() {
                 "indent",
                 "link",
                 "image",
-                "video",
                 "code-block",
               ]}/>
             <Button type='submit' gradientDuoTone='purpleToPink' >

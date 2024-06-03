@@ -7,7 +7,15 @@ export default {
     flowbite.content(),
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        header: [ 'sans-serif'],
+        body: [ 'serif'],
+        nav: ['Open Sans', 'sans-serif'],
+        footer: ['Lato', 'sans-serif'],
+        blockquote: ['Playfair Display', 'serif'],
+      },
+    },
   },
   plugins: [flowbite.plugin(),require('tailwind-scrollbar'),],
 }
