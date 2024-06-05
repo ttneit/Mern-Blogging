@@ -1,5 +1,5 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {getDownloadURL, getStorage, uploadBytesResumable ,ref} from 'firebase/storage'
@@ -7,6 +7,7 @@ import {app} from '../firebase'
 import {CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import {useNavigate} from 'react-router-dom';
+import { useRef } from 'react';
 export default function CreatePost() {
     const [file,setFile] = useState(null);
     const [imageUploadProgress,setImageUploadProgress] =useState(null);
@@ -14,6 +15,7 @@ export default function CreatePost() {
     const [formData,setFormData] = useState({});
     const [publishError,setPublishError] = useState(null);
     const navigate = useNavigate();
+    const reactQuillRef = useRef();
     const handleUploadImage = async () => {
         try {
             if(!file) {
@@ -73,7 +75,67 @@ export default function CreatePost() {
             
         }
      }
-     console.log(formData);
+     
+     const imageHandle = async() => {
+        const input = document.createElement("input");
+        input.setAttribute("type","file");
+        input.setAttribute("accept","image/*");
+        input.click();
+        input.onchange  = () => {
+            const file = input.files[0]
+            const storage = getStorage(app);
+            const fileName = new Date().getTime()+'-'+file.name;
+            const storageRef = ref(storage,fileName);
+            const uploadTask = uploadBytesResumable(storageRef,file); 
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress  = 
+                        (snapshot.bytesTransferred / snapshot.totalBytes) *100 ;
+                },
+                (error ) => {
+                    setImageUploadError(error.message);
+                },
+                () =>{
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=> {
+                        setImageUploadError(null);
+                        const cursor = reactQuillRef.current;
+                        if ( cursor) {
+                            const range = cursor.getEditorSelection();
+                            range && cursor.getEditor().insertEmbed(range.index, "image",downloadURL);
+                        }
+                    })
+                }
+            )
+        }
+     }
+     const modules = useMemo(
+        () => ({
+          toolbar: {
+            container: [
+              [{ header: '1' }, { header: '2' }, { font: [] }],
+              [{ size: [] }],
+              ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+              [
+                { list: 'ordered' },
+                { list: 'bullet' },
+                { indent: '-1' },
+                { indent: '+1' },
+              ],
+              ['link', 'image', 'video'],
+              ['code-block'],
+              ['clean'],
+            ],
+            handlers: {
+              image: imageHandle,
+            },
+          },
+          clipboard: {
+            matchVisual: false,
+          },
+        }),
+        []
+      );
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
         <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
@@ -113,28 +175,8 @@ export default function CreatePost() {
                     <img src = {formData.image} alt='upload' className='w-full h-72 object-cover' />
                 )
             }
-            <ReactQuill theme='snow' placeholder='Write something ... ' className='h-72 mb-12' required onChange={(value) => setFormData({...formData,content :value})} 
-            modules={{
-                toolbar: {
-                  container: [
-                    [{ header: "1" }, { header: "2" }, { font: [] }],
-                    [{ size: [] }],
-                    ["bold", "italic", "underline", "strike", "blockquote"],
-                    [
-                      { list: "ordered" },
-                      { list: "bullet" },
-                      { indent: "-1" },
-                      { indent: "+1" },
-                    ],
-                    ["link", "image"],
-                    ["code-block"],
-                    ["clean"],
-                  ],
-                },
-                clipboard: {
-                  matchVisual: false,
-                },
-              }}
+            <ReactQuill ref={reactQuillRef} theme='snow' placeholder='Write something ... ' className='h-72 mb-12' required onChange={(value) => setFormData({...formData,content :value})}
+            modules={modules}
               formats={[
                 "header",
                 "font",
@@ -149,8 +191,10 @@ export default function CreatePost() {
                 "indent",
                 "link",
                 "image",
+                "video",
                 "code-block",
-              ]}/>
+              ]}
+            />
             <Button type='submit' gradientDuoTone='purpleToPink' >
                 Publish
             </Button>

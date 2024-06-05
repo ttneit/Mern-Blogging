@@ -1,5 +1,5 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState ,useMemo,useRef} from 'react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 // import {useSelector} from 'react-redux';
@@ -19,6 +19,7 @@ export default function UpdatePost() {
     const [publishError,setPublishError] = useState(null);
     const navigate = useNavigate();
     const {postId} = useParams();
+    const reactQuillRef = useRef();
     useEffect(() => {
         try {
             const fetchPosts = async() => {
@@ -78,31 +79,89 @@ export default function UpdatePost() {
             console.log(error);
         }
     };
-    const handleFormData = async(e) => {
-        
-    }
+    
     const handleSubmit = async(e) => {
-    e.preventDefault();
-    try {
-        const res = await fetch (`/api/post/update/${postId}/${userContext.currentUser._id}`, {
-            method:'PUT',
-            headers:{'Content-Type' :'application/json'},
-            body:JSON.stringify(formData),
-        })
-        console.log(res);
-        const data = await res.json();
-        
-        if(!res.ok) {
-            setPublishError(data.message);
-            return;
-        }else{
-            setPublishError(null);
-            navigate(`/post/${data.slug}`);
+        e.preventDefault();
+        try {
+            const res = await fetch (`/api/post/update/${postId}/${userContext.currentUser._id}`, {
+                method:'PUT',
+                headers:{'Content-Type' :'application/json'},
+                body:JSON.stringify(formData),
+            })
+            console.log(res);
+            const data = await res.json();
+            
+            if(!res.ok) {
+                setPublishError(data.message);
+                return;
+            }else{
+                setPublishError(null);
+                navigate(`/post/${data.slug}`);
+            }
+        } catch (error) {
+            
         }
-    } catch (error) {
-        
     }
-    }
+    const imageHandle = async() => {
+        const input = document.createElement("input");
+        input.setAttribute("type","file");
+        input.setAttribute("accept","image/*");
+        input.click();
+        input.onchange  = () => {
+            const file = input.files[0]
+            const storage = getStorage(app);
+            const fileName = new Date().getTime()+'-'+file.name;
+            const storageRef = ref(storage,fileName);
+            const uploadTask = uploadBytesResumable(storageRef,file); 
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress  = 
+                        (snapshot.bytesTransferred / snapshot.totalBytes) *100 ;
+                },
+                (error ) => {
+                    setImageUploadError(error.message);
+                },
+                () =>{
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=> {
+                        setImageUploadError(null);
+                        const cursor = reactQuillRef.current;
+                        if ( cursor) {
+                            const range = cursor.getEditorSelection();
+                            range && cursor.getEditor().insertEmbed(range.index, "image",downloadURL);
+                        }
+                    })
+                }
+            )
+        }
+     }
+     const modules = useMemo(
+        () => ({
+          toolbar: {
+            container: [
+              [{ header: '1' }, { header: '2' }, { font: [] }],
+              [{ size: [] }],
+              ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+              [
+                { list: 'ordered' },
+                { list: 'bullet' },
+                { indent: '-1' },
+                { indent: '+1' },
+              ],
+              ['link', 'image', 'video'],
+              ['code-block'],
+              ['clean'],
+            ],
+            handlers: {
+              image: imageHandle,
+            },
+          },
+          clipboard: {
+            matchVisual: false,
+          },
+        }),
+        []
+      );
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
         <h1 className='text-center text-3xl my-7 font-semibold'>Update a post</h1>
@@ -142,28 +201,8 @@ export default function UpdatePost() {
                     <img src = {formData.image} alt='upload' className='w-full h-72 object-cover' />
                 )
             }
-            <ReactQuill theme='snow' placeholder='Write something ... ' className='h-72 mb-12' required onChange={(value) => setFormData({...formData,content :value})} value={formData.content}
-            modules={{
-                toolbar: {
-                  container: [
-                    [{ header: "1" }, { header: "2" }, { font: [] }],
-                    [{ size: [] }],
-                    ["bold", "italic", "underline", "strike", "blockquote"],
-                    [
-                      { list: "ordered" },
-                      { list: "bullet" },
-                      { indent: "-1" },
-                      { indent: "+1" },
-                    ],
-                    ["link", "image", "video"],
-                    ["code-block"],
-                    ["clean"],
-                  ],
-                },
-                clipboard: {
-                  matchVisual: false,
-                },
-              }}
+            <ReactQuill ref={reactQuillRef} theme='snow' placeholder='Write something ... ' className='h-72 mb-12' required onChange={(value) => setFormData({...formData,content :value})} value={formData.content}
+            modules={modules}
               formats={[
                 "header",
                 "font",
