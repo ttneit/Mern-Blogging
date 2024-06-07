@@ -119,8 +119,8 @@ export default function Search() {
               <option value='data'>
                 Data
               </option>
-              <option value='gaming'>
-              Gaming
+              <option value='sport'>
+              Sport
               </option> 
             </Select>
           </div>

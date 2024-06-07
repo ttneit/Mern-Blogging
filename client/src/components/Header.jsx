@@ -5,7 +5,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaMoon,FaSun } from "react-icons/fa";
 // import { useSelector } from 'react-redux';
 // import { useDispatch } from 'react-redux';
-
 // import { signOutSuccess } from '../redux/user/userSlice';
 import { ThemeContext } from '../context/themeContext';
 import { UserContext } from '../context/userContext';

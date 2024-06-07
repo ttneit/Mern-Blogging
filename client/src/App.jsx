@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Home from './pages/Home.jsx' 
 import About from './pages/About.jsx' 
@@ -16,30 +16,34 @@ import UpdatePost from './pages/UpdatePost.jsx';
 import PostPage from './pages/PostPage.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import Search from './pages/Search.jsx';
+import { AnimatePresence } from 'framer-motion';
+import AnimatedPage from './pages/AnimatedPage.jsx';
 function App() {
   
-
   return ( 
     <BrowserRouter>
+    <AnimatePresence mode='wait'>
     <ScrollToTop />
       <Header />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='#' element={<Project />} />
-        <Route path='/post/:postSlug' element={<PostPage />} />
+      <Routes >
+        <Route path='/' element={
+          <AnimatedPage><Home /></AnimatedPage>} />
+        <Route path='/about' element={<AnimatedPage><About /></AnimatedPage>} />
+        <Route path='#' element={<AnimatedPage><Project /></AnimatedPage>} />
+        <Route path='/post/:postSlug' element={<AnimatedPage><PostPage /></AnimatedPage>} />
         <Route element={<PrivateRoute />} >
-          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/dashboard' element={<AnimatedPage><Dashboard /></AnimatedPage>} />
         </Route>
         <Route element={<OnlyRouteForAdmin />} >
-          <Route path='/create-post' element={<CreatePost />} />
-          <Route path='/update-post/:postId' element={<UpdatePost />} />
+          <Route path='/create-post' element={<AnimatedPage><CreatePost /></AnimatedPage>} />
+          <Route path='/update-post/:postId' element={<AnimatedPage><UpdatePost /></AnimatedPage>} />
         </Route>
-        <Route path='/signin' element={<SignIn />} />
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='/search' element={<Search />} />
+        <Route path='/signin' element={<AnimatedPage><SignIn /></AnimatedPage>} />
+        <Route path='/signup' element={<AnimatedPage><SignUp /></AnimatedPage>} />
+        <Route path='/search' element={<AnimatedPage><Search /></AnimatedPage>} />
       </Routes>
       <Footer />
+    </AnimatePresence>
     </BrowserRouter>
   )
 }
