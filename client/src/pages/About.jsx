@@ -13,8 +13,8 @@ export default function About() {
     exit : {opacity : 0, x:-200}
   }
   const opacity_trans = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
+    initial: { opacity: 0 ,y : 200},
+    animate: { opacity: 1 ,y : 0},
     exit: { opacity: 0 }
   };
   return (
