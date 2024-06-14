@@ -13,9 +13,9 @@ export default function About() {
     exit : {opacity : 0, x:-200}
   }
   const opacity_trans = {
-    initial: { opacity: 0 ,y : 200},
+    initial: { opacity: 0 ,y : -200},
     animate: { opacity: 1 ,y : 0},
-    exit: { opacity: 0 }
+    exit: { opacity: 0,y:200 }
   };
   return (
     // <div className='min-h-screen flex items-center justify-center' >
