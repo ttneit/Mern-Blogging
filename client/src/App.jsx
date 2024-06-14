@@ -28,7 +28,7 @@ function App() {
       <Routes >
         <Route path='/' element={
           <AnimatedPage><Home /></AnimatedPage>} />
-        <Route path='/about' element={<AnimatedPage><About /></AnimatedPage>} />
+        <Route path='/about' element={<About />} />
         <Route path='#' element={<AnimatedPage><Project /></AnimatedPage>} />
         <Route path='/post/:postSlug' element={<AnimatedPage><PostPage /></AnimatedPage>} />
         <Route element={<PrivateRoute />} >

@@ -15,7 +15,7 @@ export default function FooterComponent() {
             <div className='ml-6 pl-4'>
               <Footer.Title title='About'/>
               <Footer.LinkGroup col>
-                <Footer.Link href='#'>Other projects</Footer.Link>
+                <Footer.Link href='#'>About me</Footer.Link>
                 <Footer.Link href='#'>Personal project</Footer.Link>
               </Footer.LinkGroup>
             </div>
