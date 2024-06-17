@@ -49,7 +49,7 @@ export default function About() {
     // </div>
     
     <div className='max-w-6xl mx-auto p-3'>
-      <motion.div className='m-6' variants={opacity_trans} initial='initial' animate='animate' exit='exit' transition={{ ease: "easeOut", duration: 2 }}>
+      <motion.div className='m-6' variants={opacity_trans} initial='initial' animate='animate' exit='exit' transition={{ ease: "easeOut", duration: 1 }}>
         <h2 className='border-b-2 border-black pb-2 text-3xl'>Overview</h2>
         <div className='text-justify'>
           <p className='mt-6'> Currently, I am a third-year student majoring in Data Science at Ho Chi Minh University of Science,
@@ -92,7 +92,6 @@ export default function About() {
               <h3 className='mb-2'>Feature</h3>
               <li><a>Crawl data from Online Website through API then store in datalake</a></li>
               <li><a>Develop ETL pipeline to transform raw data then store in data warehouse</a></li>
-              <li><a>Create interactive dashboards</a></li>
             </ul>
 
             <p className='mt-2'>Tech stack : Python , Kafka , PySpark , Cassandra , MySQL
